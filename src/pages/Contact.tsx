@@ -1,7 +1,41 @@
+import { useState } from "react"
+import axios from "axios"
+
+interface ContactState {
+  name: string;
+  email: string;
+  message: string;
+}
 
 const Contact = () => {
-  const sendMessage = () => {
-    alert("hello")
+  const [contact, setContact] = useState<ContactState>({
+    name: "",
+    email: "",
+    message: ""
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setContact((prevContact) => ({
+      ...prevContact,
+      [name]: value
+    }))
+  }
+
+  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}` + "/api/mail", contact)
+
+      console.log(res.data)
+      setContact({
+        name: "",
+        email: "",
+        message: ""
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -15,24 +49,30 @@ const Contact = () => {
           <div className="">
             <input
               className="h-[50px] w-[49vh] border text-sm mb-7 px-8 py-2 rounded-md border-[none] bg-[#fafafa0d] "
+              onChange={handleChange}
+              placeholder="Name"
+              value={contact.name}
               type="text"
               name="name"
-              placeholder="Name"
               required
             />
           </div>
           <div className="">
             <input
               className="h-[50px] w-[49vh] border text-sm mb-7 px-8 py-2 rounded-md bg-[#fafafa0d] "
-              type="text"
-              name="email"
+              onChange={handleChange}
+              value={contact.email}
               placeholder="Email"
+              name="email"
+              type="text"
               required
             />
           </div>
           <div className="">
             <textarea
               className="h-40 w-[49vh] pt-4 text-sm mb-7 px-7 py-1 border rounded-md bg-[#fafafa0d] "
+              onChange={handleChange}
+              value={contact.message}
               placeholder="Message"
               maxLength={255}
               name="message"
