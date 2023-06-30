@@ -25,7 +25,7 @@ const Contact = () => {
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const res = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}` + "/api/mail", contact)
+      const res = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}` + "/api/send", contact)
 
       console.log(res.data)
       setContact({
